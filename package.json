@@ -1,0 +1,27 @@
+{
+  "name": "twilio-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "base-64": "^0.1.0",
+    "uikit": "^3.0.0-beta.40",
+    "vue": "^2.5.13",
+    "css-loader": "^0.28.10",
+    "file-loader": "^1.1.11",
+    "style-loader": "^0.20.2",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.10"
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1"
+  },
+  "scripts": {
+    "postinstall": "npm run build",
+    "build-dev": "webpack --config webpack.config.js --mode development --watch",
+    "build": "webpack --config webpack.config.js",
+    "server": "http-server build/"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Twilio Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+
+    <div v-if="show" class="uk-alert-warning" id="settings-warning" uk-alert>
+      <a class="uk-alert-close" uk-close></a>
+      <p>{{ message }}</p>
+    </div>
+
+    <ul class="uk-flex-center uk-margin-top" uk-tab>
+      <li class="uk-active"><a href="#">SMS Message Log</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
+    <div class="uk-switcher uk-padding uk-padding-remove-top">
+      <!--
+      Message Table
+      -->
+      <div id="message-table">
+
+        <button
+          @click="fetchMessages"
+          class="uk-button uk-button-primary">Reload messages</button>
+        <div v-if="showSpinner" uk-spinner class="uk-margin-left"></div>
+
+        <table class="uk-table uk-table-justify uk-table-divider">
+          <thead>
+            <tr>
+              <th class="uk-width-small">Date</th>
+              <th>Message</th>
+              <th>From</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="sms in messageList">
+              <tr>
+                <td>{{ sms.date_sent }}</td>
+                <td>{{ sms.body }}</td>
+                <td>{{ sms.from }}</td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+
+      </div>
+
+      <!--
+      Settings Form
+      -->
+      <div id="settings-form">
+
+        <div class="uk-form-stacked">
+          <div class="uk-margin">
+            <label class="uk-form-label" for="settings-twilio-sid">Twilio SID</label>
+            <div class="uk-form-controls">
+              <input
+                id="settings-twilio-sid"
+                v-model="twilioSid"
+                @keyup.enter="validateCredentials"
+                class="uk-input" type="text"/>
+            </div>
+          </div>
+
+          <div class="uk-margin">
+            <label class="uk-form-label" for="settings-twilio-secret">Twilio Secret</label>
+            <div class="uk-form-controls">
+              <input
+                id="settings-twilio-secret"
+                v-model="twilioToken"
+                @keyup.enter="validateCredentials"
+                class="uk-input" type="text">
+            </div>
+          </div>
+
+          <div class="uk-margin uk-grid">
+            <label class="uk-width-1-2@s">
+              <button
+                @click="validateCredentials"
+                class="uk-button uk-button-default uk-button-small">
+                Validate Credentials
+              </button>
+            </label>
+            <label class="uk-width-1-2@s">
+              <input
+                v-model="saveCredentials"
+                class="uk-checkbox" type="checkbox">
+              Save credentials in browsers local storage
+            </label>
+          </div>
+
+          <div class="uk-margin">
+            <label>
+              <input
+                v-model="playSound"
+                class="uk-checkbox" type="checkbox">
+              Play success sound (Volume: {{ audioVolume * 100 }}%)
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
