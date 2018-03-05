@@ -18,7 +18,7 @@
   },
   "scripts": {
     "postinstall": "npm run build",
-    "build-dev": "webpack --config webpack.config.js --mode development --watch",
+    "build-dev": "webpack --config webpack.config.js --mode development --debug --devtool eval-cheap-module-source-map --watch",
     "build": "webpack --config webpack.config.js",
     "server": "http-server build/"
   },

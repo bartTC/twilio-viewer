@@ -35,7 +35,8 @@ let pollingTimeout = 15 * 1000;
  * @param {string} format Format to return, e.g. `xml`, `json`. Default: `json`
  */
 const twilioBase = 'https://api.twilio.com';
-function twilioApi(apiMethod, sid, token, format='json') {
+
+function twilioApi(apiMethod, sid, token, format = 'json') {
   const url = `${twilioBase}/2010-04-01/${apiMethod}.${format}`;
   const headers = new Headers();
   headers.append('Authorization', `Basic ${base64.encode(`${sid}:${token}`)}`);
@@ -51,7 +52,7 @@ function twilioApi(apiMethod, sid, token, format='json') {
  * @param {string} icon Icon to show before the message, e.g. `check` or `ban`
  * @param {int} timeout Timeout in milliseconds
  */
-function notify(status, message, icon, timeout=5000) {
+function notify(status, message, icon, timeout = 5000) {
   UIkit.notification({
     message: `<span uk-icon="icon: ${icon}"></span> ${message}`,
     status: status,
@@ -116,7 +117,9 @@ const vmSettingsForm = new Vue({
      * an example sound if turned on again.
      */
     playSound() {
-      if (this.playSound) { IncomingMessageAudio.play(); }
+      if (this.playSound) {
+        IncomingMessageAudio.play();
+      }
     },
 
     /**
@@ -140,7 +143,9 @@ const vmSettingsForm = new Vue({
     validateCredentials() {
       // Call the basic /Accounts API to check if credentials are valid.
       const [url, headers] = twilioApi('Accounts', this.twilioSid, this.twilioToken);
-      fetch(url, {headers})
+      fetch(url, {
+          headers
+        })
         .then(response => response.json())
         .then(data => {
           // Data resonse could be valid JSON but thats also the case
@@ -161,8 +166,8 @@ const vmSettingsForm = new Vue({
           // No error means the credentials were OK. Show notification
           // message and hide the global credentials warning box.
           const message =
-            this.saveCredentials ? 'Credentials OK and saved in local storage!'
-                                 : 'Credentials OK!';
+            this.saveCredentials ? 'Credentials OK and saved in local storage!' :
+            'Credentials OK!';
           notify('success', message, 'check');
           this.twilioCredentialsValid = true;
 
@@ -175,13 +180,15 @@ const vmSettingsForm = new Vue({
   }
 });
 
-
-const MessageTable = new Vue({
+/**
+ * The SMS table which loads data from Twilio.
+ */
+const vmMessageTable = new Vue({
   el: '#message-table',
   data: {
     showSpinner: false,
     messageList: [] // sid	date_created	date_updated	date_sent
-                    // account_sid	to	from	messaging_service_sid	body
+    // account_sid	to	from	messaging_service_sid	body
   },
 
   /**
@@ -207,7 +214,7 @@ const MessageTable = new Vue({
      * We have to do two+ calls here, first the /Accounts API which gives us a
      * list of all active accounts, and each account has a 'messages' API
      * URL we call to retrieve the messages of each individual account.
-    */
+     */
     fetchMessages() {
       this.showSpinner = true;
 
@@ -216,15 +223,20 @@ const MessageTable = new Vue({
         'Accounts', vmSettingsForm.twilioSid, vmSettingsForm.twilioToken);
 
       // Fetch the /Accounts API which returns a list of all accounts.
-      fetch(url, {headers})
+      fetch(url, {
+          headers
+        })
         .then(accountResponse => accountResponse.json())
         .then(accountData => {
 
           // Then, for each account in the account list, fetch the `messages`
           // API call to retrieve a list of message objects.
+
           const messagePromises = accountData.accounts.map(acc =>
-            fetch(`${twilioBase}${acc.subresource_uris.messages}`, {headers})
-              .then(messageResponse => messageResponse.json()));
+            fetch(`${twilioBase}${acc.subresource_uris.messages}`, {
+              headers
+            })
+            .then(messageResponse => messageResponse.json()));
 
           // Wait until all messages are retrieved, then filter only those
           // SMS which are 'inbound' and flatten them all into one list.
@@ -236,7 +248,9 @@ const MessageTable = new Vue({
               this.messageList = [];
               messagesObjects.map(messageData =>
                 messageData.messages.filter(m => {
-                  if (m.direction === 'inbound') { this.messageList.push(m); }
+                  if (m.direction === 'inbound') {
+                    this.messageList.push(m);
+                  }
                 })
               );
               this.showSpinner = false;
@@ -254,7 +268,7 @@ const MessageTable = new Vue({
         })
         .catch(error => {
           this.fetchMessagesError('Unable to fetch "Accounts" API!');
-          console.log('accounts error', error)
+          console.log('accounts error', error);
         });
     }
   }
