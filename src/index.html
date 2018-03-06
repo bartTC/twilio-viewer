@@ -32,7 +32,7 @@
             <tr>
               <th class="uk-width-small">Date</th>
               <th>Message</th>
-              <th>From</th>
+              <th>To / <span style="color: #ccc;">From</span></th>
             </tr>
           </thead>
           <tbody>
@@ -40,7 +40,10 @@
               <tr>
                 <td>{{ sms.date_sent }}</td>
                 <td>{{ sms.body }}</td>
-                <td>{{ sms.from }}</td>
+                <td>
+                  <span>{{ sms.to }}</span><br/>
+                  <span style="color: #ccc;">{{ sms.from }}</span>
+                </td>
               </tr>
             </template>
           </tbody>
