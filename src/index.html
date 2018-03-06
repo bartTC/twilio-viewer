@@ -41,8 +41,8 @@
                 <td>{{ sms.date_sent }}</td>
                 <td>{{ sms.body }}</td>
                 <td>
-                  <span>{{ sms.to }}</span><br/>
-                  <span style="color: #ccc;">{{ sms.from }}</span>
+                  <span>{{ formatNum(sms.to) }}</span><br/>
+                  <span style="color: #ccc;">{{ formatNum(sms.from) }}</span>
                 </td>
               </tr>
             </template>

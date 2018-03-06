@@ -202,6 +202,19 @@ const vmMessageTable = new Vue({
 
   methods: {
 
+    /**
+     * Reformat US Phone number. `+12304427501` becomes `+1 (230) 442-7501`
+     *
+     * @param {string} num
+     */
+    formatNum(num) {
+      // US Phone number formatting
+      if (num.length === 12 && num.startsWith('+1')) {
+        return `+1 (${num.slice(2,5)}) ${num.slice(5,8)}-${num.slice(8,12)}`;
+      }
+      return num;
+    },
+
     fetchMessagesError() {
       vmSettingsWarning.show = true;
       vmSettingsWarning.message = `Unable to fetch the messages API.
